@@ -11,6 +11,7 @@ import 'package:group_chat_app/services/auth_service.dart';
 import 'package:group_chat_app/services/database_service.dart';
 import 'package:group_chat_app/widgets/group_tile.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -87,27 +88,19 @@ class _HomePageState extends State<HomePage> {
                                 color: Colors.blue,
                                 icon: Icons.edit,
                                 onTap: () {
-//                                  print("edit");
-                                  print("id........."+_destructureId(
-                                      snapshot.data['groups'][reqIndex]));
-                                  print("id name........."+
-                                      snapshot.data['groups'][reqIndex]);
                                   _Update_Dialog(_destructureId(
                                       snapshot.data['groups'][reqIndex]),_destructureName(
                                       snapshot.data['groups'][reqIndex]),snapshot.data.id,snapshot.data['groups'][reqIndex]);
-//                                  _onPressed(_destructureId(
-//                                      snapshot.data['groups'][reqIndex]));
-
-                                },
+                                  },
                               ),
                               IconSlideAction(
                                 caption: 'Delete',
                                 color: Colors.red,
                                 icon: Icons.delete,
                                 onTap: () {
-                                  _showMyDialog(snapshot.data.id,snapshot.data['groups'][reqIndex],);
-                                  print(snapshot.data['groups'][reqIndex]);
-                                  print(snapshot.data.id);
+                                  _showDeleteDialog(snapshot.data.id,snapshot.data['groups'][reqIndex],);
+//                                  print(snapshot.data['groups'][reqIndex]);
+//                                  print(snapshot.data.id);
                                 },
 
                               ),
@@ -165,13 +158,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _popupDialog(BuildContext context) {
-    Widget cancelButton = FlatButton(
+    Widget cancelButton = TextButton(
       child: Text("Cancel"),
       onPressed: () {
         Navigator.of(context).pop();
       },
     );
-    Widget createButton = FlatButton(
+    Widget createButton = TextButton(
       child: Text("Create"),
       onPressed: () async {
         if (_groupName != null) {
@@ -179,6 +172,8 @@ class _HomePageState extends State<HomePage> {
             DatabaseService(uid: _user.uid).createGroup(val, _groupName);
           });
           Navigator.of(context).pop();
+          createToast();
+
         }
       },
     );
@@ -191,8 +186,9 @@ class _HomePageState extends State<HomePage> {
           },
           style: TextStyle(fontSize: 15.0, height: 2.0, color: Colors.black)),
       actions: [
-        cancelButton,
         createButton,
+        cancelButton
+
       ],
     );
 
@@ -282,27 +278,19 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  //delete function
+  //delete user group data
   deleteData(String id, String groupval ) {
-//    final collection = FirebaseFirestore.instance.collection('groups');
-//    collection
-//        .doc(groupval) // <-- Doc ID to be deleted.
-//        .delete() // <-- Delete
-//        .then((_) => print('Deleted'))
-//        .catchError((error) => print('Delete failed: $error'));
     FirebaseFirestore.instance
         .collection("users")
         .doc(id)
         .update({"groups":
     FieldValue.arrayRemove([groupval]),
     });
-
-
-
+    deleteToast();
   }
 
   //confiromation for delete button
-  Future<void> _showMyDialog(String id, String groupval) async {
+  Future<void> _showDeleteDialog(String id, String groupval) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -378,6 +366,8 @@ class _HomePageState extends State<HomePage> {
       },
     );
   }
+
+  //Update group data
   updateData(String name, String id,String id1, String nameu ) {
     FirebaseFirestore.instance
         .collection("groups")
@@ -399,8 +389,49 @@ class _HomePageState extends State<HomePage> {
         .update({"groups":
     FieldValue.arrayUnion([id+"_"+name]),
     });
-
+    updateToast();
   }
+
+  //Delete success toast
+deleteToast(){
+
+  Fluttertoast.showToast(
+      msg: "successfully deleted",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0
+  );
+}
+
+//update toast msg
+  updateToast(){
+    Fluttertoast.showToast(
+        msg: "successfully updated",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
+  }
+
+//create toast msg
+createToast(){
+    Fluttertoast.showToast(
+        msg: "successfully created",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0
+    );
+
+}
 
 
 
