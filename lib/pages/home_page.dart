@@ -1,10 +1,8 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:group_chat_app/helper/helper_functions.dart';
 import 'package:group_chat_app/pages/authenticate_page.dart';
-import 'package:group_chat_app/pages/chat_page.dart';
 import 'package:group_chat_app/pages/profile_page.dart';
 import 'package:group_chat_app/pages/search_page.dart';
 import 'package:group_chat_app/services/auth_service.dart';
@@ -12,7 +10,6 @@ import 'package:group_chat_app/services/database_service.dart';
 import 'package:group_chat_app/widgets/group_tile.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 
 class HomePage extends StatefulWidget {
   @override
@@ -27,7 +24,7 @@ class _HomePageState extends State<HomePage> {
   String _userName = '';
   String _email = '';
   Stream _groups;
-  String namex='';
+  String namex = '';
 
   // initState
   @override
@@ -70,48 +67,52 @@ class _HomePageState extends State<HomePage> {
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     int reqIndex = snapshot.data['groups'].length - index - 1;
-                    return Column(
-                        children: [
-
-                          Slidable(child: GroupTile(
-                              userName: snapshot.data['fullName'],
-                              groupId:
-                              _destructureId(snapshot.data['groups'][reqIndex]),
-                              groupName: _destructureName(
-                                  snapshot.data['groups'][reqIndex])),
-                            actionPane: SlidableScrollActionPane(),
-                            actionExtentRatio: 0.25,
-
-                            actions: <Widget>[
-                              IconSlideAction(
-                                caption: 'Edit',
-                                color: Colors.blue,
-                                icon: Icons.edit,
-                                onTap: () {
-                                  _Update_Dialog(_destructureId(
-                                      snapshot.data['groups'][reqIndex]),_destructureName(
-                                      snapshot.data['groups'][reqIndex]),snapshot.data.id,snapshot.data['groups'][reqIndex]);
-                                  },
-                              ),
-                              IconSlideAction(
-                                caption: 'Delete',
-                                color: Colors.red,
-                                icon: Icons.delete,
-                                onTap: () {
-                                  _showDeleteDialog(snapshot.data.id,snapshot.data['groups'][reqIndex],);
+                    return Column(children: [
+                      Slidable(
+                        child: GroupTile(
+                            userName: snapshot.data['fullName'],
+                            groupId: _destructureId(
+                                snapshot.data['groups'][reqIndex]),
+                            groupName: _destructureName(
+                                snapshot.data['groups'][reqIndex])),
+                        actionPane: SlidableScrollActionPane(),
+                        actionExtentRatio: 0.25,
+                        actions: <Widget>[
+                          IconSlideAction(
+                            caption: 'Edit',
+                            color: Colors.blue,
+                            icon: Icons.edit,
+                            onTap: () {
+                              _Update_Dialog(
+                                  _destructureId(
+                                      snapshot.data['groups'][reqIndex]),
+                                  _destructureName(
+                                      snapshot.data['groups'][reqIndex]),
+                                  snapshot.data.id,
+                                  snapshot.data['groups'][reqIndex]);
+                            },
+                          ),
+                          IconSlideAction(
+                            caption: 'Delete',
+                            color: Colors.red,
+                            icon: Icons.delete,
+                            onTap: () {
+                              _showDeleteDialog(
+                                snapshot.data.id,
+                                snapshot.data['groups'][reqIndex],
+                              );
 //                                  print(snapshot.data['groups'][reqIndex]);
 //                                  print(snapshot.data.id);
-                                },
-
-                              ),
-                              IconSlideAction(
-                                caption: 'Close',
-                                color: Colors.teal,
-                                icon: Icons.close,
-
-                              ),
-                            ],)
-                        ]);
+                            },
+                          ),
+                          IconSlideAction(
+                            caption: 'Close',
+                            color: Colors.teal,
+                            icon: Icons.close,
+                          ),
+                        ],
+                      )
+                    ]);
                   });
             } else {
               return noGroupWidget();
@@ -173,7 +174,6 @@ class _HomePageState extends State<HomePage> {
           });
           Navigator.of(context).pop();
           createToast();
-
         }
       },
     );
@@ -185,11 +185,7 @@ class _HomePageState extends State<HomePage> {
             _groupName = val;
           },
           style: TextStyle(fontSize: 15.0, height: 2.0, color: Colors.black)),
-      actions: [
-        createButton,
-        cancelButton
-
-      ],
+      actions: [createButton, cancelButton],
     );
 
     showDialog(
@@ -236,7 +232,7 @@ class _HomePageState extends State<HomePage> {
               onTap: () {},
               selected: true,
               contentPadding:
-              EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                  EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
               leading: Icon(Icons.group),
               title: Text('Groups'),
             ),
@@ -247,7 +243,7 @@ class _HomePageState extends State<HomePage> {
                         ProfilePage(userName: _userName, email: _email)));
               },
               contentPadding:
-              EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                  EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
               leading: Icon(Icons.account_circle),
               title: Text('Profile'),
             ),
@@ -256,10 +252,10 @@ class _HomePageState extends State<HomePage> {
                 await _auth.signOut();
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) => AuthenticatePage()),
-                        (Route<dynamic> route) => false);
+                    (Route<dynamic> route) => false);
               },
               contentPadding:
-              EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                  EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
               leading: Icon(Icons.exit_to_app, color: Colors.red),
               title: Text('Log Out', style: TextStyle(color: Colors.red)),
             ),
@@ -279,12 +275,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   //delete user group data
-  deleteData(String id, String groupval ) {
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(id)
-        .update({"groups":
-    FieldValue.arrayRemove([groupval]),
+  deleteData(String id, String groupval) {
+    FirebaseFirestore.instance.collection("users").doc(id).update({
+      "groups": FieldValue.arrayRemove([groupval]),
     });
     deleteToast();
   }
@@ -308,9 +301,8 @@ class _HomePageState extends State<HomePage> {
             TextButton(
               child: Text('Confirm'),
               onPressed: () {
-                deleteData(id,groupval);
+                deleteData(id, groupval);
                 Navigator.of(context).pop();
-
               },
             ),
             TextButton(
@@ -325,10 +317,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<void> _Update_Dialog( String groupval,String name,String id1, String nameu) async {
-    final txtGroupName=new TextEditingController();
+  Future<void> _Update_Dialog(
+      String groupval, String name, String id1, String nameu) async {
+    final txtGroupName = new TextEditingController();
 
-    txtGroupName.text=name;
+    txtGroupName.text = name;
 
     return showDialog<void>(
       context: context,
@@ -342,7 +335,7 @@ class _HomePageState extends State<HomePage> {
                 TextField(
                   controller: txtGroupName,
                 )
-                ],
+              ],
             ),
           ),
           actions: <Widget>[
@@ -350,9 +343,8 @@ class _HomePageState extends State<HomePage> {
               child: Text('Update'),
               onPressed: () {
 //                deleteData(id,groupval);
-                updateData(txtGroupName.text,groupval,id1,nameu);
+                updateData(txtGroupName.text, groupval, id1, nameu);
                 Navigator.of(context).pop();
-
               },
             ),
             TextButton(
@@ -368,46 +360,38 @@ class _HomePageState extends State<HomePage> {
   }
 
   //Update group data
-  updateData(String name, String id,String id1, String nameu ) {
+  updateData(String name, String id, String id1, String nameu) {
     FirebaseFirestore.instance
         .collection("groups")
         .doc(id)
-        .update({"groupName":name}).then((_) {
+        .update({"groupName": name}).then((_) {
       print("success!");
     });
     ////////////////////////
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(id1)
-        .update({"groups":
-    FieldValue.arrayRemove([nameu]),
+    FirebaseFirestore.instance.collection("users").doc(id1).update({
+      "groups": FieldValue.arrayRemove([nameu]),
     });
 
-    FirebaseFirestore.instance
-        .collection("users")
-        .doc(id1)
-        .update({"groups":
-    FieldValue.arrayUnion([id+"_"+name]),
+    FirebaseFirestore.instance.collection("users").doc(id1).update({
+      "groups": FieldValue.arrayUnion([id + "_" + name]),
     });
     updateToast();
   }
 
   //Delete success toast
-deleteToast(){
-
-  Fluttertoast.showToast(
-      msg: "successfully deleted",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-      fontSize: 16.0
-  );
-}
+  deleteToast() {
+    Fluttertoast.showToast(
+        msg: "successfully deleted",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
+  }
 
 //update toast msg
-  updateToast(){
+  updateToast() {
     Fluttertoast.showToast(
         msg: "successfully updated",
         toastLength: Toast.LENGTH_SHORT,
@@ -415,12 +399,11 @@ deleteToast(){
         timeInSecForIosWeb: 1,
         backgroundColor: Colors.green,
         textColor: Colors.white,
-        fontSize: 16.0
-    );
+        fontSize: 16.0);
   }
 
 //create toast msg
-createToast(){
+  createToast() {
     Fluttertoast.showToast(
         msg: "successfully created",
         toastLength: Toast.LENGTH_SHORT,
@@ -428,11 +411,6 @@ createToast(){
         timeInSecForIosWeb: 1,
         backgroundColor: Colors.green,
         textColor: Colors.white,
-        fontSize: 16.0
-    );
-
-}
-
-
-
+        fontSize: 16.0);
+  }
 }
