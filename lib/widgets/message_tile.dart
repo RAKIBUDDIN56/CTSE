@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class MessageTile extends StatelessWidget {
   final String message;
-  String at;
   final String sender;
   final bool sentByMe;
 
@@ -28,7 +27,7 @@ class MessageTile extends StatelessWidget {
                   topLeft: Radius.circular(23),
                   topRight: Radius.circular(23),
                   bottomRight: Radius.circular(23)),
-          color: sentByMe ? Colors.blueAccent : Colors.grey[700],
+          color: sentByMe ? Colors.blueAccent[200] : Colors.grey[300],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,14 +35,16 @@ class MessageTile extends StatelessWidget {
             Text(sender.toUpperCase(),
                 textAlign: TextAlign.start,
                 style: TextStyle(
-                    fontSize: 13.0,
+                    fontSize: 15.0,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: sentByMe ? Colors.red[200] : Colors.green[300],
                     letterSpacing: -0.5)),
             SizedBox(height: 7.0),
             Text(message,
                 textAlign: TextAlign.start,
-                style: TextStyle(fontSize: 15.0, color: Colors.white)),
+                style: TextStyle(
+                    fontSize: 15.0,
+                    color: sentByMe ? Colors.white : Colors.black)),
           ],
         ),
       ),

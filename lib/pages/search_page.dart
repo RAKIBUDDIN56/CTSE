@@ -81,9 +81,9 @@ class _SearchPageState extends State<SearchPage> {
             itemBuilder: (context, index) {
               return groupTile(
                 _userName,
-                searchResultSnapshot.docs[index].get("groupId"),
-                searchResultSnapshot.docs[index].get("groupName"),
-                searchResultSnapshot.docs[index].get("admin"),
+                searchResultSnapshot.docs[index]["groupId"],
+                searchResultSnapshot.docs[index]["groupName"],
+                searchResultSnapshot.docs[index]["admin"],
               );
             })
         : Container();

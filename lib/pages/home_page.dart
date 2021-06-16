@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:group_chat_app/helper/helper_functions.dart';
 import 'package:group_chat_app/pages/authenticate_page.dart';
 import 'package:group_chat_app/pages/chat_page.dart';
+import 'package:group_chat_app/pages/contactList.dart';
 import 'package:group_chat_app/pages/profile_page.dart';
 import 'package:group_chat_app/pages/search_page.dart';
 import 'package:group_chat_app/services/auth_service.dart';
@@ -188,12 +189,24 @@ class _HomePageState extends State<HomePage> {
                 textAlign: TextAlign.center,
                 style: TextStyle(fontWeight: FontWeight.bold)),
             SizedBox(height: 7.0),
+            // ListTile(
+            //   onTap: () {
+            //     Navigator.push(context,
+            //         MaterialPageRoute(builder: (context) => ContactList()));
+            //   },
+            //   contentPadding:
+            //       EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+            //   leading: Icon(Icons.account_circle),
+            //   title: Text('Contacts'),
+            // ),
             ListTile(
               onTap: () {},
               selected: true,
               contentPadding:
                   EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-              leading: Icon(Icons.group),
+              leading: Icon(
+                Icons.group,
+              ),
               title: Text('Groups'),
             ),
             ListTile(
